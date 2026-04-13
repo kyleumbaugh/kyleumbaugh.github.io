@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Purdue Outdoor Adventure Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=Caveat:wght@600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #f5f0e8;
+      --cream-dark: #ede7d9;
+      --forest: #2d5016;
+      --forest-mid: #3d6b1f;
+      --forest-light: #5a8a32;
+      --gold: #cfb53b;
+      --gold-light: #e8d060;
+      --charcoal: #1e2019;
+      --charcoal-mid: #3a3c35;
+      --bark: #6b4c2a;
+      --sage: #7a9e6e;
+      --sage-light: #a8c49a;
+      --white: #fefdf9;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); overflow-x: hidden; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(245,240,232,0.93); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(45,80,22,0.15);
+      padding: 0 2rem; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1.05rem;
+      color: var(--forest); letter-spacing: -0.02em; text-decoration: none;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.82rem; font-weight: 500; color: var(--charcoal-mid);
+      text-decoration: none; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--forest); }
+
+    /* HERO */
+    #hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; padding-top: 64px; position: relative; overflow: hidden; }
+    .hero-left {
+      background: var(--forest); display: flex; flex-direction: column;
+      justify-content: center; padding: 5rem 4rem 5rem 5rem; position: relative; overflow: hidden;
+    }
+    .hero-left::before {
+      content: ''; position: absolute; width: 500px; height: 500px; border-radius: 50%;
+      border: 1px solid rgba(90,138,50,0.2); top: -150px; right: -200px; pointer-events: none;
+    }
+    .hero-left::after {
+      content: ''; position: absolute; width: 300px; height: 300px; border-radius: 50%;
+      border: 1px solid rgba(207,181,59,0.15); bottom: 50px; left: -100px; pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: 'Caveat', cursive; font-size: 1.3rem; color: var(--gold);
+      margin-bottom: 1rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif; font-size: clamp(2.6rem, 3.5vw, 4rem);
+      font-weight: 900; color: var(--white); line-height: 1.05; letter-spacing: -0.02em;
+      margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s;
+    }
+    .hero-title em { font-style: italic; color: var(--gold-light); }
+    .hero-tagline {
+      font-size: 1rem; color: rgba(254,253,249,0.75); font-weight: 300;
+      line-height: 1.75; max-width: 380px; margin-bottom: 3rem;
+      opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s;
+    }
+    .hero-ctas { display: flex; flex-direction: column; gap: 0.75rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.8s; }
+    .cta-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--sage-light); margin-bottom: 0.25rem; }
+    .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .cta-btn {
+      padding: 0.65rem 1.4rem; border-radius: 100px; font-size: 0.85rem; font-weight: 500;
+      text-decoration: none; transition: all 0.2s; border: 1.5px solid transparent; cursor: pointer;
+    }
+    .cta-btn.educator { background: var(--gold); color: var(--forest); }
+    .cta-btn.educator:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .cta-btn.parent { border-color: rgba(254,253,249,0.4); color: var(--white); background: transparent; }
+    .cta-btn.parent:hover { border-color: var(--white); background: rgba(254,253,249,0.1); transform: translateY(-2px); }
+    .cta-btn.youth { border-color: var(--sage); color: var(--sage-light); background: transparent; }
+    .cta-btn.youth:hover { background: rgba(122,158,110,0.15); transform: translateY(-2px); }
+
+    .hero-right { background: var(--cream-dark); position: relative; overflow: hidden; display: flex; align-items: flex-end; }
+    .hero-illustration { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+    .hero-stat-bar {
+      position: relative; z-index: 2; width: 100%; padding: 2rem 2.5rem;
+      background: linear-gradient(to top, rgba(45,80,22,0.92), transparent);
+      display: flex; gap: 2rem;
+    }
+    .hero-stat { color: var(--white); }
+    .hero-stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: var(--gold-light); line-height: 1; }
+    .hero-stat-label { font-size: 0.75rem; opacity: 0.8; margin-top: 0.2rem; }
+
+    /* SHARED SECTION */
+    section { scroll-margin-top: 64px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; padding: 5rem 2rem; }
+    .section-tag { display: inline-block; font-family: 'Caveat', cursive; font-size: 1.1rem; color: var(--forest-light); margin-bottom: 0.5rem; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 3vw, 2.8rem); font-weight: 900; color: var(--charcoal); letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 1rem; }
+    .section-lead { font-size: 1.05rem; font-weight: 300; color: var(--charcoal-mid); line-height: 1.8; max-width: 580px; }
+
+    /* ABOUT */
+    #about { background: var(--white); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+    .about-card { background: var(--forest); border-radius: 16px; padding: 3rem; color: var(--white); position: relative; overflow: hidden; }
+    .about-card::after { content: '🌳'; position: absolute; font-size: 8rem; bottom: -1rem; right: -1rem; opacity: 0.15; pointer-events: none; }
+    .about-card-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--gold-light); margin-bottom: 1rem; }
+    .about-card p { font-size: 0.95rem; line-height: 1.75; opacity: 0.85; }
+    .about-badge {
+      position: absolute; top: -1rem; right: -1rem; width: 80px; height: 80px;
+      background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-family: 'Caveat', cursive; font-size: 0.85rem; font-weight: 600; color: var(--forest);
+      text-align: center; line-height: 1.2; padding: 0.5rem; transform: rotate(12deg);
+    }
+    .about-text .section-lead { max-width: 100%; }
+    .about-pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+    .pillar { background: var(--cream); border-radius: 10px; padding: 1.25rem; border-left: 3px solid var(--forest-light); }
+    .pillar-icon { font-size: 1.4rem; margin-bottom: 0.4rem; }
+    .pillar-title { font-weight: 500; font-size: 0.9rem; color: var(--forest); margin-bottom: 0.25rem; }
+    .pillar-desc { font-size: 0.8rem; color: var(--charcoal-mid); line-height: 1.5; }
+
+    /* ACTIVITIES */
+    #activities { background: var(--cream); }
+    .activities-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; gap: 2rem; }
+    .pdf-embed-wrapper { background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 40px rgba(45,80,22,0.1); border: 1px solid rgba(45,80,22,0.1); margin-bottom: 3rem; }
+    .pdf-embed-header { background: var(--forest); padding: 1.25rem 1.75rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .pdf-embed-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--white); font-weight: 700; }
+    .pdf-embed-sub { font-size: 0.8rem; color: rgba(254,253,249,0.65); margin-top: 0.2rem; }
+    .pdf-download-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem; background: var(--gold);
+      color: var(--forest); padding: 0.6rem 1.25rem; border-radius: 100px; font-size: 0.85rem;
+      font-weight: 600; text-decoration: none; transition: all 0.2s; white-space: nowrap;
+    }
+    .pdf-download-btn:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .pdf-embed-frame { width: 100%; height: 700px; border: none; display: block; }
+    .activities-more-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--charcoal); margin-bottom: 1.5rem; }
+    .activity-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .activity-card {
+      background: var(--white); border-radius: 12px; padding: 1.75rem;
+      border: 1px solid rgba(45,80,22,0.08); position: relative; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .activity-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(45,80,22,0.1); }
+    .activity-card.placeholder { opacity: 0.6; border-style: dashed; }
+    .activity-tags { display: flex; gap: 0.4rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .tag { font-size: 0.7rem; padding: 0.25rem 0.6rem; border-radius: 100px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+    .tag.spring { background: #e8f5e9; color: #2e7d32; }
+    .tag.summer { background: #fff8e1; color: #f57f17; }
+    .tag.fall { background: #fbe9e7; color: #bf360c; }
+    .tag.all-ages { background: var(--cream-dark); color: var(--charcoal-mid); }
+    .tag.ages-5 { background: var(--cream-dark); color: var(--charcoal-mid); }
+    .tag.ages-8 { background: var(--cream-dark); color: var(--charcoal-mid); }
+    .activity-card-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--charcoal); margin-bottom: 0.5rem; }
+    .activity-card-desc { font-size: 0.85rem; color: var(--charcoal-mid); line-height: 1.6; }
+    .coming-soon { position: absolute; top: 1rem; right: 1rem; font-family: 'Caveat', cursive; font-size: 0.85rem; color: var(--sage); }
+
+    /* RESOURCES */
+    #resources { background: var(--forest); color: var(--white); }
+    #resources .section-title { color: var(--white); }
+    #resources .section-tag { color: var(--gold-light); }
+    #resources .section-lead { color: rgba(254,253,249,0.75); }
+    .tab-bar { display: flex; gap: 0.5rem; margin: 2.5rem 0 2rem; border-bottom: 1px solid rgba(255,255,255,0.15); }
+    .tab-btn {
+      padding: 0.65rem 1.5rem; background: transparent; border: none;
+      color: rgba(254,253,249,0.5); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent;
+      margin-bottom: -1px; transition: all 0.2s; letter-spacing: 0.02em;
+    }
+    .tab-btn.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+    .tab-btn:hover:not(.active) { color: rgba(254,253,249,0.8); }
+    .tab-content { display: none; }
+    .tab-content.active { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .resource-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.75rem; transition: background 0.2s; }
+    .resource-card:hover { background: rgba(255,255,255,0.1); }
+    .resource-icon { font-size: 1.6rem; margin-bottom: 0.75rem; }
+    .resource-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; }
+    .resource-desc { font-size: 0.85rem; color: rgba(254,253,249,0.65); line-height: 1.65; }
+    .resource-link { display: inline-block; margin-top: 0.75rem; font-size: 0.8rem; color: var(--gold-light); text-decoration: none; font-weight: 500; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+    .resource-link:hover { border-bottom-color: var(--gold-light); }
+
+    /* TREE SPOTLIGHT */
+    #spotlight { background: var(--cream-dark); }
+    .spotlight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+    .tree-card { background: var(--white); border-radius: 16px; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s; border: 1px solid rgba(45,80,22,0.08); }
+    .tree-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(45,80,22,0.15); }
+    .tree-card-header { background: var(--forest); padding: 2rem 1.75rem 1.5rem; position: relative; min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end; }
+    .tree-number { position: absolute; top: 1rem; right: 1.25rem; font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: rgba(255,255,255,0.08); line-height: 1; }
+    .tree-emoji { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .tree-common { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--white); line-height: 1.2; }
+    .tree-scientific { font-size: 0.8rem; font-style: italic; color: var(--sage-light); margin-top: 0.2rem; }
+    .tree-card-body { padding: 1.5rem 1.75rem; }
+    .tree-clue { font-size: 0.85rem; color: var(--charcoal-mid); line-height: 1.65; padding-bottom: 1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--cream-dark); }
+    .tree-funfact { font-size: 0.82rem; color: var(--forest-mid); line-height: 1.6; }
+    .tree-funfact strong { color: var(--forest); font-weight: 600; }
+    .tree-season-badge { display: inline-block; margin-top: 1rem; font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 100px; background: var(--cream-dark); color: var(--forest-mid); font-weight: 500; }
+
+    /* VISIT */
+    #visit { background: var(--white); }
+    .visit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+    .visit-info-blocks { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem; }
+    .visit-block { display: flex; gap: 1rem; align-items: flex-start; }
+    .visit-block-icon { width: 44px; height: 44px; background: var(--cream-dark); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; border: 1px solid rgba(45,80,22,0.1); }
+    .visit-block-title { font-weight: 600; font-size: 0.9rem; color: var(--charcoal); margin-bottom: 0.3rem; }
+    .visit-block-text { font-size: 0.85rem; color: var(--charcoal-mid); line-height: 1.65; }
+    .map-placeholder { background: var(--cream-dark); border-radius: 16px; overflow: hidden; height: 380px; border: 1px solid rgba(45,80,22,0.1); position: relative; }
+    .map-placeholder iframe { width: 100%; height: 100%; border: none; }
+    .map-overlay-btn { position: absolute; bottom: 1rem; right: 1rem; background: var(--forest); color: var(--white); padding: 0.6rem 1.2rem; border-radius: 100px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.2s; }
+    .map-overlay-btn:hover { background: var(--forest-mid); }
+
+    /* FOOTER */
+    footer { background: var(--charcoal); color: rgba(254,253,249,0.6); padding: 2.5rem 2rem; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--white); }
+    .footer-logo span { color: var(--gold); }
+    .footer-text { font-size: 0.8rem; line-height: 1.6; }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a { font-size: 0.8rem; color: rgba(254,253,249,0.5); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--gold-light); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 900px) {
+      #hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 4rem 2rem 3rem; }
+      .hero-right { height: 280px; }
+      .about-grid, .visit-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .spotlight-grid { grid-template-columns: 1fr; }
+      .activity-cards { grid-template-columns: 1fr; }
+      .tab-content.active { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .about-pillars { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-logo">🌿 Purdue <span>Outdoor</span> Hub</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#activities">Activities</a></li>
+    <li><a href="#resources">Resources</a></li>
+    <li><a href="#spotlight">Tree Spotlight</a></li>
+    <li><a href="#visit">Visit</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">🌱 Welcome to West Lafayette's outdoor classroom</div>
+    <h1 class="hero-title">The Purdue<br/><em>Outdoor</em><br/>Adventure Hub</h1>
+    <p class="hero-tagline">Bridging education and nature, one trail at a time. Discover resources, activities, and guided experiences centered on the Purdue Arboretum and Horticulture Park.</p>
+    <div class="hero-ctas">
+      <div class="cta-label">I am a...</div>
+      <div class="cta-row">
+        <a href="#resources" class="cta-btn educator" onclick="setTab('educators')">Educator</a>
+        <a href="#resources" class="cta-btn parent" onclick="setTab('parents')">Parent</a>
+        <a href="#resources" class="cta-btn youth" onclick="setTab('youth')">Youth Leader</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <svg class="hero-illustration" viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a3a0a"/>
+          <stop offset="100%" stop-color="#4a7a28"/>
+        </linearGradient>
+        <radialGradient id="sunG" cx="72%" cy="22%" r="32%">
+          <stop offset="0%" stop-color="#cfb53b" stop-opacity="0.28"/>
+          <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="600" height="800" fill="url(#skyG)"/>
+      <rect width="600" height="800" fill="url(#sunG)"/>
+      <!-- Sun -->
+      <circle cx="430" cy="125" r="48" fill="#cfb53b" opacity="0.16"/>
+      <circle cx="430" cy="125" r="28" fill="#e8d060" opacity="0.22"/>
+      <!-- Ground -->
+      <ellipse cx="300" cy="820" rx="420" ry="130" fill="#1a2e08" opacity="0.95"/>
+      <!-- Center tree trunk -->
+      <rect x="272" y="415" width="56" height="330" rx="8" fill="#4a2e0e" opacity="0.9"/>
+      <line x1="288" y1="430" x2="285" y2="710" stroke="#3a220a" stroke-width="2" opacity="0.45"/>
+      <line x1="308" y1="425" x2="304" y2="718" stroke="#3a220a" stroke-width="1.5" opacity="0.35"/>
+      <line x1="322" y1="430" x2="320" y2="712" stroke="#3a220a" stroke-width="1.5" opacity="0.35"/>
+      <!-- Center canopy -->
+      <ellipse cx="300" cy="325" rx="135" ry="115" fill="#1a420a" opacity="0.9"/>
+      <ellipse cx="300" cy="285" rx="115" ry="105" fill="#28600f" opacity="0.88"/>
+      <ellipse cx="300" cy="255" rx="92" ry="82" fill="#357215" opacity="0.9"/>
+      <ellipse cx="300" cy="235" rx="72" ry="62" fill="#468520" opacity="0.88"/>
+      <ellipse cx="285" cy="215" rx="36" ry="30" fill="#58a02a" opacity="0.38"/>
+      <!-- Left tree -->
+      <rect x="78" y="525" width="26" height="225" rx="5" fill="#4a2e0e" opacity="0.78"/>
+      <ellipse cx="91" cy="465" rx="68" ry="72" fill="#1a420a" opacity="0.78"/>
+      <ellipse cx="91" cy="435" rx="52" ry="58" fill="#28600f" opacity="0.82"/>
+      <ellipse cx="82" cy="415" rx="24" ry="21" fill="#58a02a" opacity="0.28"/>
+      <!-- Right bg tree -->
+      <rect x="492" y="558" width="20" height="188" rx="4" fill="#4a2e0e" opacity="0.58"/>
+      <ellipse cx="502" cy="498" rx="52" ry="63" fill="#1a420a" opacity="0.58"/>
+      <ellipse cx="502" cy="472" rx="42" ry="48" fill="#28600f" opacity="0.62"/>
+      <!-- Pink blossoms -->
+      <circle cx="228" cy="248" r="8" fill="#f8a4c0" opacity="0.68"/>
+      <circle cx="246" cy="232" r="6" fill="#fbbdd1" opacity="0.6"/>
+      <circle cx="352" cy="242" r="7" fill="#f8a4c0" opacity="0.62"/>
+      <circle cx="368" cy="258" r="5" fill="#ffc8da" opacity="0.58"/>
+      <circle cx="208" cy="268" r="5" fill="#ffc8da" opacity="0.48"/>
+      <circle cx="375" cy="225" r="4" fill="#f8a4c0" opacity="0.5"/>
+      <!-- Gold specks -->
+      <circle cx="178" cy="348" r="3" fill="#cfb53b" opacity="0.58"/>
+      <circle cx="422" cy="308" r="2.5" fill="#cfb53b" opacity="0.48"/>
+      <circle cx="148" cy="418" r="2" fill="#e8d060" opacity="0.38"/>
+      <circle cx="462" cy="398" r="3" fill="#e8d060" opacity="0.48"/>
+      <circle cx="392" cy="198" r="2" fill="#cfb53b" opacity="0.42"/>
+      <!-- Path -->
+      <path d="M252 800 Q272 718 286 648 Q295 598 300 578 Q305 598 314 648 Q328 718 348 800" fill="#c8a96e" opacity="0.22"/>
+      <!-- Ground grass -->
+      <path d="M48 678 Q54 648 60 678" stroke="#357215" stroke-width="3" fill="none" opacity="0.68"/>
+      <path d="M62 678 Q70 643 78 678" stroke="#468520" stroke-width="3" fill="none" opacity="0.65"/>
+      <path d="M132 698 Q138 663 143 698" stroke="#357215" stroke-width="2.5" fill="none" opacity="0.58"/>
+      <path d="M452 698 Q458 668 464 698" stroke="#357215" stroke-width="3" fill="none" opacity="0.58"/>
+      <path d="M512 688 Q519 656 524 688" stroke="#468520" stroke-width="2.5" fill="none" opacity="0.62"/>
+      <path d="M542 682 Q548 650 554 682" stroke="#357215" stroke-width="2.5" fill="none" opacity="0.58"/>
+      <!-- Foreground flowers -->
+      <circle cx="158" cy="688" r="6" fill="#f8a4c0" opacity="0.78"/>
+      <circle cx="158" cy="688" r="2.5" fill="#fff" opacity="0.88"/>
+      <line x1="158" y1="694" x2="156" y2="718" stroke="#357215" stroke-width="2"/>
+      <circle cx="432" cy="698" r="6" fill="#cfb53b" opacity="0.78"/>
+      <circle cx="432" cy="698" r="2.5" fill="#fff" opacity="0.88"/>
+      <line x1="432" y1="704" x2="434" y2="726" stroke="#357215" stroke-width="2"/>
+      <circle cx="482" cy="692" r="5" fill="#f8a4c0" opacity="0.68"/>
+      <circle cx="482" cy="692" r="2" fill="#fff" opacity="0.88"/>
+      <line x1="482" y1="697" x2="480" y2="720" stroke="#357215" stroke-width="2"/>
+      <!-- Birds -->
+      <path d="M118 178 Q124 172 130 178 Q136 172 142 178" stroke="rgba(255,255,255,0.38)" stroke-width="1.5" fill="none"/>
+      <path d="M162 152 Q167 147 172 152 Q177 147 182 152" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none"/>
+      <path d="M452 98 Q457 93 462 98 Q467 93 472 98" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none"/>
+    </svg>
+    <div class="hero-stat-bar">
+      <div class="hero-stat"><div class="hero-stat-num">17</div><div class="hero-stat-label">Featured Trees</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">∞</div><div class="hero-stat-label">Outdoor Classrooms</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">1</div><div class="hero-stat-label">Beautiful Campus</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-visual">
+        <div class="about-card">
+          <div class="about-badge">Est.<br/>1874</div>
+          <div class="about-card-title">The Purdue Arboretum</div>
+          <p>The Purdue Arboretum encompasses the entire campus of Purdue University — a living collection of thousands of trees, shrubs, and plants spread across West Lafayette, Indiana. The Horticulture Park serves as a curated centerpiece, with labeled specimens perfect for guided learning.</p>
+        </div>
+      </div>
+      <div class="about-text">
+        <div class="section-tag">🌿 Our Mission</div>
+        <h2 class="section-title">Where the Classroom<br/>Meets the Canopy</h2>
+        <p class="section-lead">The Purdue Outdoor Adventure Hub exists to close the gap between structured education and the natural world. We connect educators, parents, and youth organizations with tools, activities, and resources that make outdoor learning accessible, engaging, and meaningful.</p>
+        <div class="about-pillars">
+          <div class="pillar"><div class="pillar-icon">📚</div><div class="pillar-title">Curriculum-Connected</div><div class="pillar-desc">Resources aligned to learning goals and Indiana science standards.</div></div>
+          <div class="pillar"><div class="pillar-icon">🌳</div><div class="pillar-title">Place-Based</div><div class="pillar-desc">Anchored to a real, walkable, labeled arboretum on Purdue's campus.</div></div>
+          <div class="pillar"><div class="pillar-icon">👨‍👩‍👧</div><div class="pillar-title">Accessible to All</div><div class="pillar-desc">Designed for classrooms, families, and community groups alike.</div></div>
+          <div class="pillar"><div class="pillar-icon">🔭</div><div class="pillar-title">Curiosity-Driven</div><div class="pillar-desc">Activities that reward observation, exploration, and discovery.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVITIES -->
+<section id="activities">
+  <div class="section-inner">
+    <div class="activities-header">
+      <div>
+        <div class="section-tag">🗺️ Get Outside</div>
+        <h2 class="section-title">Activities &amp; Downloads</h2>
+        <p class="section-lead">Printable, field-ready activities built around the Purdue Arboretum. Take them outside and explore.</p>
+      </div>
+    </div>
+
+    <div class="pdf-embed-wrapper">
+      <div class="pdf-embed-header">
+        <div>
+          <div class="pdf-embed-title">🌸 Spring on Purdue — Tree Scavenger Hunt</div>
+          <div class="pdf-embed-sub">17 trees · Campus map included · Answer key provided · All ages</div>
+        </div>
+        <a href="Tree_Scavenger_Hunt_.pdf" download class="pdf-download-btn">⬇ Download PDF</a>
+      </div>
+      <iframe class="pdf-embed-frame" src="Tree_Scavenger_Hunt_.pdf" title="Spring on Purdue Tree Scavenger Hunt PDF">
+        <p>Your browser doesn't support PDF embedding. <a href="Tree_Scavenger_Hunt_.pdf" download>Download the PDF here.</a></p>
+      </iframe>
+    </div>
+
+    <div class="activities-more-title">More Activities</div>
+    <div class="activity-cards">
+      <div class="activity-card">
+        <div class="activity-tags"><span class="tag spring">Spring</span><span class="tag all-ages">All Ages</span></div>
+        <div class="activity-card-title">Spring Tree Scavenger Hunt</div>
+        <div class="activity-card-desc">Identify 17 labeled trees across the Purdue campus using photo clues and a map. Perfect for classroom field trips or family walks.</div>
+      </div>
+      <div class="activity-card placeholder">
+        <span class="coming-soon">Coming soon</span>
+        <div class="activity-tags"><span class="tag fall">Fall</span><span class="tag ages-8">Ages 8+</span></div>
+        <div class="activity-card-title">Fall Leaf &amp; Color Journal</div>
+        <div class="activity-card-desc">Document seasonal color change across campus. Observe, sketch, and record findings in a guided nature journal format.</div>
+      </div>
+      <div class="activity-card placeholder">
+        <span class="coming-soon">Coming soon</span>
+        <div class="activity-tags"><span class="tag summer">Summer</span><span class="tag ages-5">Ages 5+</span></div>
+        <div class="activity-card-title">Pollinator Patrol</div>
+        <div class="activity-card-desc">Explore the Horticulture Park to observe and identify pollinators. Includes a simple tally sheet and identification guide.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESOURCES -->
+<section id="resources">
+  <div class="section-inner">
+    <div class="section-tag">📖 For Every Audience</div>
+    <h2 class="section-title">Learning Resources</h2>
+    <p class="section-lead">Whether you're planning a field trip, a weekend walk, or a badge activity — find what you need here.</p>
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('educators', this)">🎓 Educators</button>
+      <button class="tab-btn" onclick="switchTab('parents', this)">👨‍👩‍👧 Parents</button>
+      <button class="tab-btn" onclick="switchTab('youth', this)">⚜️ Youth Organizations</button>
+    </div>
+    <div id="tab-educators" class="tab-content active">
+      <div class="resource-card"><div class="resource-icon">📋</div><div class="resource-title">Field Trip Planning Guide</div><div class="resource-desc">Step-by-step guidance for organizing a class visit to the Purdue Arboretum, including logistics, chaperone ratios, and pre-visit preparation activities.</div><a href="https://www.arboretum.purdue.edu/" target="_blank" class="resource-link">Purdue Arboretum Website →</a></div>
+      <div class="resource-card"><div class="resource-icon">🔬</div><div class="resource-title">Indiana Science Standards Connections</div><div class="resource-desc">Our activities map to Indiana Academic Standards in Life Science (grades K–8), focusing on plant structure, ecosystems, and seasonal change.</div><a href="https://www.doe.in.gov/standards/science" target="_blank" class="resource-link">Indiana DOE Standards →</a></div>
+      <div class="resource-card"><div class="resource-icon">📓</div><div class="resource-title">Nature Journaling in the Classroom</div><div class="resource-desc">Intro guide to incorporating nature journaling as an observation and writing tool. Works across grade levels and multiple subject areas.</div><a href="https://www.projectnoah.org/" target="_blank" class="resource-link">Project Noah →</a></div>
+      <div class="resource-card"><div class="resource-icon">🌿</div><div class="resource-title">Project Learning Tree</div><div class="resource-desc">A nationally recognized environmental education program offering standards-aligned lesson plans that integrate seamlessly with arboretum visits.</div><a href="https://www.plt.org/" target="_blank" class="resource-link">Visit PLT →</a></div>
+    </div>
+    <div id="tab-parents" class="tab-content">
+      <div class="resource-card"><div class="resource-icon">🗺️</div><div class="resource-title">Self-Guided Family Walk</div><div class="resource-desc">Download the Spring Tree Scavenger Hunt and use the included campus map for a casual 45–60 minute walk with your family. No prep needed — just print and go.</div><a href="#activities" class="resource-link">Go to Activities →</a></div>
+      <div class="resource-card"><div class="resource-icon">📱</div><div class="resource-title">iNaturalist App</div><div class="resource-desc">A free app that lets families photograph and identify plants and animals in real time. A great companion to any arboretum walk — works for complete beginners.</div><a href="https://www.inaturalist.org/" target="_blank" class="resource-link">Download iNaturalist →</a></div>
+      <div class="resource-card"><div class="resource-icon">🌸</div><div class="resource-title">What to Look For by Season</div><div class="resource-desc">Spring brings flowering crabapples and magnolias. Summer offers full canopy and pollinators. Fall turns the tulip trees gold. Winter reveals structure and bark texture.</div><a href="https://www.arboretum.purdue.edu/" target="_blank" class="resource-link">Purdue Spring Interest Tour →</a></div>
+      <div class="resource-card"><div class="resource-icon">🐦</div><div class="resource-title">Merlin Bird ID</div><div class="resource-desc">The arboretum attracts a variety of birds. Merlin by Cornell Lab identifies birds by sound or photo instantly — turning any walk into a birding adventure.</div><a href="https://merlin.allaboutbirds.org/" target="_blank" class="resource-link">Get Merlin →</a></div>
+    </div>
+    <div id="tab-youth" class="tab-content">
+      <div class="resource-card"><div class="resource-icon">⚜️</div><div class="resource-title">Scout Badge Connections</div><div class="resource-desc">The Tree Scavenger Hunt supports several BSA and GSUSA badges including Tree Identification, Forestry, and Nature. Contact your troop leader for alignment details.</div><a href="https://www.scouting.org/" target="_blank" class="resource-link">BSA Website →</a></div>
+      <div class="resource-card"><div class="resource-icon">🌱</div><div class="resource-title">4-H Horticulture Projects</div><div class="resource-desc">Indiana 4-H offers plant science and horticulture project paths. The Purdue Arboretum is an ideal real-world setting for exploration and project documentation.</div><a href="https://extension.purdue.edu/4h/" target="_blank" class="resource-link">Purdue Extension 4-H →</a></div>
+      <div class="resource-card"><div class="resource-icon">🏕️</div><div class="resource-title">Group Activity Logistics</div><div class="resource-desc">Tips for running the Tree Scavenger Hunt with groups of 10–30 youth. Divide into teams, assign map zones, and reconvene with findings for a group debrief.</div><a href="#activities" class="resource-link">Download the Hunt →</a></div>
+      <div class="resource-card"><div class="resource-icon">🔭</div><div class="resource-title">Junior Master Gardener Program</div><div class="resource-desc">A hands-on horticulture program for youth ages 8–12. Connect JMG activities with in-person exploration at the Purdue Horticulture Park.</div><a href="https://jmgkids.us/" target="_blank" class="resource-link">JMG Program →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- TREE SPOTLIGHT -->
+<section id="spotlight">
+  <div class="section-inner">
+    <div class="section-tag">🌳 Featured from the Hunt</div>
+    <h2 class="section-title">Tree Spotlight</h2>
+    <p class="section-lead">Three remarkable trees found along the Purdue Arboretum's Spring Interest Tour — each with a story worth knowing.</p>
+    <div class="spotlight-grid">
+      <div class="tree-card">
+        <div class="tree-card-header">
+          <div class="tree-number">#12</div>
+          <div class="tree-emoji">🌿</div>
+          <div class="tree-common">Common Pawpaw</div>
+          <div class="tree-scientific">Asimina triloba</div>
+        </div>
+        <div class="tree-card-body">
+          <div class="tree-clue">A native understory tree with large, tropical-looking leaves that produces a custard-flavored fruit — the largest edible fruit native to North America.</div>
+          <div class="tree-funfact"><strong>Fun Fact:</strong> Pawpaws were a favorite of George Washington and Thomas Jefferson, both of whom grew them at their estates. The fruit tastes like a cross between banana and mango.</div>
+          <div class="tree-season-badge">🍂 Best in late summer–fall</div>
+        </div>
+      </div>
+      <div class="tree-card">
+        <div class="tree-card-header">
+          <div class="tree-number">#15</div>
+          <div class="tree-emoji">🌸</div>
+          <div class="tree-common">Tulip Tree</div>
+          <div class="tree-scientific">Liriodendron tulipifera</div>
+        </div>
+        <div class="tree-card-body">
+          <div class="tree-clue">A tall native tree with uniquely shaped leaves and tulip-shaped greenish-yellow flowers. One of the tallest eastern hardwoods — can reach over 150 feet.</div>
+          <div class="tree-funfact"><strong>Fun Fact:</strong> The Tulip Tree is Indiana's state tree. Native Americans hollowed single trunks to make dugout canoes large enough to carry 20 people.</div>
+          <div class="tree-season-badge">🌸 Blooms May–June</div>
+        </div>
+      </div>
+      <div class="tree-card">
+        <div class="tree-card-header">
+          <div class="tree-number">#4</div>
+          <div class="tree-emoji">🌰</div>
+          <div class="tree-common">Ohio Buckeye</div>
+          <div class="tree-scientific">Aesculus glabra</div>
+        </div>
+        <div class="tree-card-body">
+          <div class="tree-clue">A native tree with distinctive palmate leaves (5 leaflets) and yellow-green flower clusters. Produces the shiny brown nuts known as "buckeyes."</div>
+          <div class="tree-funfact"><strong>Fun Fact:</strong> The dark mark on the nut resembles a deer's eye — hence "buckeye." Carrying one is a traditional good luck charm, which is likely how Ohio State University got its mascot.</div>
+          <div class="tree-season-badge">🌼 Flowers in April–May</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISIT -->
+<section id="visit">
+  <div class="section-inner">
+    <div class="visit-grid">
+      <div>
+        <div class="section-tag">📍 Plan Your Trip</div>
+        <h2 class="section-title">Visit the Arboretum</h2>
+        <p class="section-lead">The Purdue Arboretum is free, open year-round, and accessible from anywhere on campus.</p>
+        <div class="visit-info-blocks">
+          <div class="visit-block">
+            <div class="visit-block-icon">📍</div>
+            <div><div class="visit-block-title">Location</div><div class="visit-block-text">Purdue University Campus, West Lafayette, IN 47907. The Horticulture Park is located near the Horticulture Building on S. University Street.</div></div>
+          </div>
+          <div class="visit-block">
+            <div class="visit-block-icon">🕐</div>
+            <div><div class="visit-block-title">Hours</div><div class="visit-block-text">The arboretum grounds are accessible year-round during daylight hours. No admission fee or reservation required for self-guided visits.</div></div>
+          </div>
+          <div class="visit-block">
+            <div class="visit-block-icon">🚗</div>
+            <div><div class="visit-block-title">Parking</div><div class="visit-block-text">Visitor parking is available in the Horticulture Lot off Marsteller Street. Metered parking is also available along S. University Street.</div></div>
+          </div>
+          <div class="visit-block">
+            <div class="visit-block-icon">♿</div>
+            <div><div class="visit-block-title">Accessibility</div><div class="visit-block-text">Paved paths connect many arboretum locations. The Horticulture Park has accessible walkways throughout the main garden areas.</div></div>
+          </div>
+          <div class="visit-block">
+            <div class="visit-block-icon">📬</div>
+            <div><div class="visit-block-title">Group Visits &amp; Field Trips</div><div class="visit-block-text">For organized groups, contact the Purdue HLA department to coordinate your visit.<br/><a href="https://www.arboretum.purdue.edu/" target="_blank" style="color:var(--forest-light);font-size:0.82rem;">arboretum.purdue.edu →</a></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="map-placeholder">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3051.03!2d-86.9226!3d40.4237!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8812e2b9ec8b2fef%3A0x2b0f2e60a6c6cfee!2sPurdue%20Horticulture%20Park!5e0!3m2!1sen!2sus!4v1" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Purdue Horticulture Park Map"></iframe>
+        <a href="https://maps.google.com/?q=Purdue+Horticulture+Park+West+Lafayette+IN" target="_blank" class="map-overlay-btn">Open in Google Maps →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">🌿 Purdue <span>Outdoor</span> Adventure Hub</div>
+      <div class="footer-text" style="margin-top:0.4rem;">Built in partnership with the Purdue Arboretum &amp; Horticulture Park · West Lafayette, IN</div>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#activities">Activities</a></li>
+      <li><a href="#resources">Resources</a></li>
+      <li><a href="#visit">Visit</a></li>
+      <li><a href="https://www.arboretum.purdue.edu/" target="_blank">Purdue Arboretum</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function setTab(tabId) {
+    setTimeout(() => {
+      const map = { educators: 0, parents: 1, youth: 2 };
+      const btns = document.querySelectorAll('.tab-btn');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      if (btns[map[tabId]]) btns[map[tabId]].classList.add('active');
+    }, 500);
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.tree-card, .resource-card, .activity-card, .pillar, .visit-block').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
